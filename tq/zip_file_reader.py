@@ -1,7 +1,7 @@
 """
 Functions to facilitate reading ZIP files.
 """
-from typing import Generator
+from typing import Generator, Optional
 from zipfile import ZipFile
 
 
@@ -26,7 +26,7 @@ class ZipFileReader:
             "File name must be specified.")
 
         self._filename = filename
-        self._zip_file = None
+        self._zip_file: Optional[ZipFile] = None
 
     def list_filenames(self) -> Generator[str, None, None]:
         """
@@ -42,23 +42,33 @@ class ZipFileReader:
         """
         return (info.filename for info in self._zip_file.infolist() if info.is_dir())
 
-    def read_archive_file(self, filename: str) -> bytes:
+    def read_archive_file(self, filename: str, password: str = None) -> Optional[bytes]:
         """
         Reads a file contained in the ZIP.
         :param filename: The name of the file to read.
+        :param password: The ZIP file password.
         :return: The file's contents as a byte array.
         """
         ZipFileReader._ensure_string_not_none_or_whitespace(
             filename,
             "File name must be specified.")
 
-        return self._zip_file.read(filename)
+        try:
+            return self._zip_file.read(filename, password.encode() if password else None)
+        except RuntimeError as runtime_error:
+            if "password" in str(runtime_error):
+                raise ZipFileReaderError("The ZIP file is password protected."
+                                         " Pass the password into the read_archive_file method.") \
+                    from runtime_error
 
-    def read_archive_file_as_string(self, filename: str, encoding: str):
+        return None
+
+    def read_archive_file_as_string(self, filename: str, encoding: str, password: str = None):
         """
         Reads a file contained in the ZIP with the specified encoding.
         :param filename: The name of the file to read.
         :param encoding: The encoding to use to read the file.
+        :param password: The ZIP file password.
         :return: The file's contents as a string.
         """
 
@@ -70,7 +80,7 @@ class ZipFileReader:
             encoding,
             "Encoding must be specified.")
 
-        file_bytes = self.read_archive_file(filename)
+        file_bytes = self.read_archive_file(filename, password)
         return file_bytes.decode(encoding)
 
     def __enter__(self):
