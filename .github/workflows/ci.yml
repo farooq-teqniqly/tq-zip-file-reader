@@ -18,21 +18,21 @@ jobs:
       - name: Analyze code with pylint
         run: |
           pylint $(git ls-files '*.py')
-
+  upload_test_files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-files
+          path: test/zip_files/*.zip
   tests:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: ECHO environment variables
-        run: |
-          echo  "$GITHUB_WORKSPACE"
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: '3.9.9'
-      - name: Copy files
-        run: |
-          echo  "$GITHUB_WORKSPACE"
       - name: Run tests with coverage
         uses: dima-engineer/pytest-reporter@v1.1.3
         with:
