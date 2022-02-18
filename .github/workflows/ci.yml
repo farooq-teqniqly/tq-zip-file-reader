@@ -46,6 +46,7 @@ jobs:
       - name: Run tests with coverage
         uses: dima-engineer/pytest-reporter@v1.1.3
         with:
+          pytest-root-dir: ${{ github.workspace }}/test
           cov-omit-list: test/*,setup.py
           cov-threshold-total: 90
   deploy_pypi:
