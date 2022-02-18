@@ -18,6 +18,9 @@ jobs:
       - name: Analyze code with pylint
         run: |
           pylint $(git ls-files '*.py')
+      - name: List files
+        run: |
+          ls ${{ github.workspace }}
   tests:
     runs-on: ubuntu-latest
     needs: build
