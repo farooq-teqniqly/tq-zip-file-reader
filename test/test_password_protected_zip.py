@@ -5,7 +5,7 @@ import pytest
 from tq.zip_file_reader import ZipFileReader, ZipFileReaderError
 
 PWD = "1234"
-zip_filename = os.path.join(os.getcwd(), "zip_files", "valid_zip_with_password.zip")
+zip_filename = os.path.join(os.getcwd(), "../test", "zip_files", "valid_zip_with_password.zip")
 zfr = ZipFileReader(zip_filename)
 
 
