@@ -2,13 +2,11 @@ import os.path
 
 import pytest
 
+from . import get_zip_file_root_folder
+
 from tq.zip_file_reader import ZipFileReader, ZipFileReaderError
 
-if os.getenv("GITHUB_WORKSPACE"):
-    valid_zip_filename = os.path.join(os.getcwd(), "zip_files", "valid_zip_with_folders.zip")
-else:
-    valid_zip_filename = os.path.join(os.getcwd(), "..", "zip_files", "valid_zip_with_folders.zip")
-
+valid_zip_filename = os.path.join(get_zip_file_root_folder(), "valid_zip_with_folders.zip")
 zfr = ZipFileReader(valid_zip_filename)
 
 

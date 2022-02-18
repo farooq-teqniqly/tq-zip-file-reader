@@ -2,17 +2,13 @@ import os
 
 import pytest
 
+from . import get_zip_file_root_folder
 from tq.zip_file_reader import ZipFileReader, ZipFileReaderError
 
 print(os.getcwd().upper())
 
 PWD = "1234"
-
-if os.getenv("GITHUB_WORKSPACE"):
-    zip_filename = os.path.join(os.getcwd(), "zip_files", "valid_zip_with_password.zip")
-else:
-    zip_filename = os.path.join(os.getcwd(), "..", "zip_files", "valid_zip_with_password.zip")
-
+zip_filename = os.path.join(get_zip_file_root_folder(), "valid_zip_with_password.zip")
 zfr = ZipFileReader(zip_filename)
 
 
