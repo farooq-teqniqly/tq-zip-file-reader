@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: List workspace files
         run: |
-          ls $GITHUB_WORKSPACE -R
+          ls -R $GITHUB_WORKSPACE
 #      - uses: actions/upload-artifact@v2
 #        with:
 #          name: test-files
