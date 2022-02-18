@@ -37,6 +37,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: List workspace files
         run: |
+          pwd &&
           ls -R $GITHUB_WORKSPACE
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
