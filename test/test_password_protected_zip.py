@@ -1,5 +1,7 @@
 import os
 
+import pytest
+
 from tq.zip_file_reader import ZipFileReader, ZipFileReaderError
 
 PWD = "1234"
@@ -25,3 +27,13 @@ def test_can_read_archived_file_with_encoding():
         filename = list(zfr.list_filenames())[0]
         file_str = zfr.read_archive_file_as_string(filename, "utf-8", PWD)
         assert "Realtek" in file_str
+
+
+@pytest.mark.parametrize("password", [None, "", "  "])
+def test_read_archive_file_raises_error_when_password_not_specified(password):
+    with pytest.raises(ZipFileReaderError) as e:
+        with zfr:
+            filename = list(zfr.list_filenames())[0]
+            zfr.read_archive_file(filename, password)
+
+    assert str(e.value) == "The ZIP file is password protected. Pass the password into the read_archive_file method."
