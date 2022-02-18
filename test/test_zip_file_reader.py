@@ -9,8 +9,9 @@ zfr = ZipFileReader(valid_zip_filename)
 
 
 def test_can_list_filenames():
-    filenames = zfr.list_filenames()
-    assert list(filenames) == ["folder01/file01.log", "folder02/file02.log", "folder03/file03.log"]
+    with zfr:
+        filenames = zfr.list_filenames()
+        assert list(filenames) == ["folder01/file01.log", "folder02/file02.log", "folder03/file03.log"]
 
 
 def test_can_list_directories():
@@ -19,15 +20,17 @@ def test_can_list_directories():
 
 
 def test_can_read_archived_file():
-    filename = list(zfr.list_filenames())[0]
-    file_bytes = zfr.read_archive_file(filename)
-    assert len(file_bytes) == 5524
+    with zfr:
+        filename = list(zfr.list_filenames())[0]
+        file_bytes = zfr.read_archive_file(filename)
+        assert len(file_bytes) == 5524
 
 
 def test_can_read_archived_file_with_encoding():
-    filename = list(zfr.list_filenames())[0]
-    file_str = zfr.read_archive_file_as_string(filename, "utf-8")
-    assert "Realtek" in file_str
+    with zfr:
+        filename = list(zfr.list_filenames())[0]
+        file_str = zfr.read_archive_file_as_string(filename, "utf-8")
+        assert "Realtek" in file_str
 
 
 @pytest.mark.parametrize("filename", [None, "", "  "])

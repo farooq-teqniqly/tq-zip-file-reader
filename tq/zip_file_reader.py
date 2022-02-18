@@ -15,6 +15,7 @@ class ZipFileReader:
     """
     Facilitates reading ZIP files.
     """
+
     def __init__(self, filename: str):
         """
         Creates a ZipFileReader instance.
@@ -24,7 +25,8 @@ class ZipFileReader:
             filename,
             "File name must be specified.")
 
-        self._zip_file = ZipFile(filename)
+        self._filename = filename
+        self._zip_file = None
 
     def list_filenames(self) -> Generator[str, None, None]:
         """
@@ -70,6 +72,12 @@ class ZipFileReader:
 
         file_bytes = self.read_archive_file(filename)
         return file_bytes.decode(encoding)
+
+    def __enter__(self):
+        self._zip_file = ZipFile(self._filename)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._zip_file.close()
 
     @staticmethod
     def _ensure_string_not_none_or_whitespace(value, message):
