@@ -4,12 +4,15 @@ import pytest
 
 from tq.zip_file_reader import ZipFileReader, ZipFileReaderError
 
-valid_zip_filename = os.path.join(os.getcwd(), "..", "zip_files", "valid_zip_with_folders.zip")
+if os.getenv("GITHUB_WORKSPACE"):
+    valid_zip_filename = os.path.join(os.getcwd(), "zip_files", "valid_zip_with_folders.zip")
+else:
+    valid_zip_filename = os.path.join(os.getcwd(), "..", "zip_files", "valid_zip_with_folders.zip")
+
 zfr = ZipFileReader(valid_zip_filename)
 
 
 def test_can_list_filenames():
-
     with zfr:
         filenames = zfr.list_filenames()
         assert list(filenames) == ["folder01/file01.log", "folder02/file02.log", "folder03/file03.log"]
